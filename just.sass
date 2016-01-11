@@ -1,0 +1,134 @@
+/*! Just CSS v0.0.1 | ISC License */
+$justcss-vendor-support: ('webkit', 'moz', 'ms', 'o')
+$justcss-browser-support: ('Chrome': 44, 'Edge': 11, 'IE': 9, 'iOS': 5, 'Firefox': 4, 'Opera': 8, 'Safari': 5)
+
+@function clean-var($variable)
+    @return unquote(to-lower-case($variable))
+
+@function justcss-list-contains($list, $value)
+    $value: clean-var($value)
+    $new-list: ()
+    @each $item in $list
+        $item: clean-var($item)
+        $new-list: append($new-list, $item)
+
+    @if index($new-list, $value) != null
+        @return true
+    @else
+        @return false
+
+@function justcss-supports-vendor($vendor)
+    $vendor: clean-var($vendor)
+    @return justcss-list-contains($justcss-vendor-support, $vendor)
+
+@function justcss-supports-browser($value)
+    $value: clean-var($value)
+    $newlist: ()
+    @each $browser, $version in $justcss-browser-support
+        $newlist: append($newlist, $browser)
+
+    @return justcss-list-contains($newlist, $value)
+
+@function justcss-supports($browser, $version)
+    $browser: clean-var($browser)
+    $newmap: ()
+    @each $b, $v in $justcss-browser-support
+        $newmap: map-merge($newmap, (clean-var($b): $v))
+
+    @if map-has-key($newmap, $browser)
+        @if $version >= map-get($newmap, $browser)
+            @return true
+        @else
+            @return false
+    @else
+        @return false
+
+
+*
+    @if justcss-supports-vendor('webkit')
+        -webkit-appearance: none
+    background: none
+    border: 0
+    color: inherit
+    font-family: inherit
+    font-size: inherit
+    font-style: inherit
+    font-weight: inherit
+    line-height: inherit
+    list-style: inherit
+    margin: 0
+    padding: 0
+    text-decoration: inherit
+    vertical-align: baseline
+
+html
+    cursor: default
+    @if justcss-supports-vendor('webkit')
+        -webkit-text-size-adjust: 100%
+    word-wrap: break-word
+
+@if justcss-supports('IE', 8) or justcss-supports('IE', 9)
+    // Corrects `block` display not defined in IE 8/9.
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    nav,
+    section,
+    summary
+        display: block
+
+@if justcss-supports('IE', 8) or justcss-supports('IE', 9)
+    // Corrects `inline-block` display not defined in IE 8/9.
+    audio,
+    canvas,
+    video
+        display: inline-block
+
+@if justcss-supports('iOS', 5)
+    // Prevents modern browsers from displaying `audio` without controls.
+    // Remove excess height in iOS 5 devices.
+    audio:not([controls])
+        display: none
+        height: 0
+
+@if justcss-supports('IE', 8) or justcss-supports('IE', 9)
+    // Addresses styling for `hidden` attribute not present in IE 8/9.
+    [hidden]
+        display: none
+
+@if justcss-supports-browser('Chrome')
+    // Addresses `outline` inconsistency between Chrome and other browsers.
+    a:focus
+        outline: thin dotted
+
+// Improves readability when focused and also mouse hovered in all browsers.
+a
+    &:active, &:hover
+        outline: 0
+
+// Improves readability of pre-formatted text in all browsers.
+pre
+    white-space: pre
+    white-space: pre-wrap
+
+@if justcss-supports('IE', 9)
+    // Corrects overflow displayed oddly in IE 9.
+    svg:not(:root)
+        overflow: hidden
+
+// 1. Removes default vertical scrollbar in IE 8/9.
+// 2. Improves readability and alignment in all browsers.
+textarea
+    @if justcss-supports('IE', 8) or justcss-supports('IE', 9)
+        overflow: auto // 1
+    vertical-align: top // 2
+
+// Remove most spacing between table cells.
+table
+    border-collapse: collapse
+    border-spacing: 0
